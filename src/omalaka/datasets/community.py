@@ -17,7 +17,7 @@ INFO = {
     "title": "omalaka community translations",
     "kind": "human",
     "langs": ["kj", "ng"],
-    "homepage": "https://github.com/gijzelaerr/omalaka/tree/main/community",
+    "homepage": "https://github.com/omalaka/model/tree/main/community",
     "licence": "CC-BY-4.0",
     "licence_note": "Contributors agree to CC BY 4.0 when they submit (community/README.md).",
     "checked": "2026-10-29",

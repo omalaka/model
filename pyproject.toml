@@ -29,7 +29,7 @@ omalaka-train = "omalaka.train:main"
 omalaka-evaluate = "omalaka.evaluate:main"
 
 [project.urls]
-Repository = "https://github.com/gijzelaerr/omalaka"
+Repository = "https://github.com/omalaka/model"
 
 [build-system]
 requires = ["uv_build>=0.9,<0.14"]

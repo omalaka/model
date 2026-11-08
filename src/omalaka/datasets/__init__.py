@@ -19,7 +19,7 @@ import json
 import urllib.request
 from pathlib import Path
 
-USER_AGENT = "omalaka-data/0.1 (https://github.com/gijzelaerr/omalaka)"
+USER_AGENT = "omalaka-data/0.1 (https://github.com/omalaka/model)"
 
 
 def download(url: str, path: Path, log: list) -> Path:
