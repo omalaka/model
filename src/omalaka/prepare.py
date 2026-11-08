@@ -38,7 +38,7 @@ def usable(src: str, tgt: str, min_words: int) -> bool:
 def main(argv=None):
     sets = registry()
     p = argparse.ArgumentParser()
-    p.add_argument("--datasets", nargs="*", default=[n for n, m in sets.items() if m.INFO["kind"] == "human"],
+    p.add_argument("--datasets", nargs="*", default=[n for n, m in sets.items() if m.INFO["kind"] in ("human", "translated")],
                    help="downloaded datasets to use (default: every human-translated one)")
     p.add_argument("--extra", nargs="*", default=[], help="more JSONL pairs, treated as human translations")
     p.add_argument("--exclude", nargs="*", default=[], help="test sets whose sentences must stay out of training")
@@ -54,11 +54,12 @@ def main(argv=None):
     human, synthetic = [], []
     for name in args.datasets:
         kind = sets[name].INFO["kind"]
-        if kind not in ("human", "synthetic"):
+        if kind not in ("human", "synthetic", "translated"):
             p.error(f"{name} is {kind} data, not training pairs")
         path = Path(args.data) / name / "pairs.jsonl"
         if not path.exists():
             p.error(f"{path} is missing: run omalaka-download {name}")
+        # "translated" (human translations of English prompts) is train-only, like synthetic.
         (human if kind == "human" else synthetic).extend(load_jsonl(path))
     for path in args.extra:
         human.extend({**r, "origin": r.get("origin", Path(path).stem)} for r in load_jsonl(path))

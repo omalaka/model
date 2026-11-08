@@ -40,6 +40,13 @@ for training anywhere. They need a `reviewed_by` before they count. Aim for
 sentences as varied as possible, written first in Oshiwambo, not
 translated from English.
 
+## From omalaka.net
+
+Pairs made on [omalaka.net](https://omalaka.net), where speakers write,
+translate and check sentences, are exported to [website/](website/README.md).
+That includes translations of open English sentences from Tatoeba, whose
+English side is CC BY 2.0 FR; see website/README.md before reusing them.
+
 ## Licence
 
 By opening a pull request that adds or changes rows here, you confirm that

@@ -3,6 +3,11 @@
 Nothing is downloaded: the TSV files in the repository are the source. Each
 row says who translated it and whether a second speaker checked it; see
 community/README.md for the format and the contribution terms.
+
+Two places: community/*.tsv (pull requests here) and community/website/*.tsv
+(written and checked on omalaka.net). Translations of English prompts from
+the website (*-from-english.tsv) are a separate dataset,
+community_from_english, because their English side is from Tatoeba.
 """
 import csv
 from pathlib import Path
@@ -28,7 +33,9 @@ INFO = {
 
 def read(root: Path = ROOT):
     rows = []
-    for path in sorted(root.glob("*.tsv")):
+    paths = sorted(root.glob("*.tsv")) + sorted(p for p in (root / "website").glob("*.tsv")
+                                                if not p.name.endswith("-from-english.tsv"))
+    for path in paths:
         with open(path, encoding="utf-8", newline="") as fh:
             for rec in csv.DictReader(fh, delimiter="\t"):
                 if rec.get("oshiwambo", "").strip() and rec.get("english", "").strip():

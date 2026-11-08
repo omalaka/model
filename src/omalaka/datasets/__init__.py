@@ -9,6 +9,7 @@ fetch writes to data/NAME/ (gitignored):
 INFO["kind"] says how prepare may use the data:
   human      human translations: train, dev and test
   synthetic  machine-made source side: train only, never dev or test
+  translated human translations of English prompts: train only (translationese)
   mono       monolingual: back-translation input only
   test       evaluation only, never training
 docs/data.md has the full table, including sources checked and rejected.
@@ -44,5 +45,6 @@ def write_source(out: Path, info: dict, files: list):
 
 
 def registry():
-    from . import community, ongiini, synthetic_madlad, translatewiki, wikipedia
-    return {m.INFO["name"]: m for m in (translatewiki, community, ongiini, wikipedia, synthetic_madlad)}
+    from . import community, community_from_english, ongiini, synthetic_madlad, translatewiki, wikipedia
+    return {m.INFO["name"]: m for m in (translatewiki, community, community_from_english, ongiini, wikipedia,
+                                        synthetic_madlad)}

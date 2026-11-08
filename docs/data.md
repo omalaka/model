@@ -15,7 +15,8 @@ Codes: `kj` Oshikwanyama (ISO 639-3 `kua`), `ng` Oshindonga (`ndo`).
 | Name | Kind | Langs | Size | Licence | Status |
 |---|---|---|---|---|---|
 | `translatewiki` | human | kj | 36 pairs | CC BY 3.0 (stated on the OPUS corpus page) | verified |
-| `community` | human | kj, ng | contributions in `community/` | CC BY 4.0 | verified, empty so far |
+| `community` | human | kj, ng | contributions in `community/` and `community/website/` (omalaka.net) | CC BY 4.0 | verified, empty so far |
+| `community_from_english` | translated (train only) | kj, ng | omalaka.net translations of Tatoeba English prompts, `community/website/*-from-english.tsv` | CC BY 4.0 (Oshiwambo) + CC BY 2.0 FR (English) | verified, empty so far |
 | `ongiini` | test | kj, ng | 600 items | CC BY 4.0 (`data/oshiwambo_eval/LICENSE` upstream) | verified; English sources only until v1.0 (planned end 2026) |
 | `wikipedia` | mono | ng, kj | ngwiki 85 kB, kjwiki 8 kB (bz2); a few hundred lines of text | CC BY-SA 4.0, share-alike | verified; quality poor (see below) |
 | `synthetic-madlad` | synthetic | kj | as generated | English: Tatoeba, CC BY 2.0 FR. Kwanyama: MADLAD-400 output (Apache-2.0 model) | verified licence, experimental quality |

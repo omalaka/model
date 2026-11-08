@@ -12,3 +12,5 @@ runs*/
 logs*/
 results*/
 models*/
+# ...except the dataset code, which data*/ would otherwise catch.
+!src/omalaka/datasets/
