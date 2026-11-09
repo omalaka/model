@@ -1,6 +1,9 @@
 # Contributing
 
-Thank you for helping! In order of how much they help right now:
+Thank you for helping! To talk about ideas or ask questions first, join the
+`#omalaka` channel on the [Namibia Discord server](https://discord.gg/TpezqrBUwr).
+
+In order of how much they help right now:
 
 1. **Translations.** If you speak Oshikwanyama or Oshindonga (or another
    Namibian language), add sentence pairs to [community/](community/README.md),

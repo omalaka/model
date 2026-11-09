@@ -14,7 +14,8 @@ Khoekhoegowab, Rukwangali and Silozi come later; see the
 The first experiments used corpora that are not openly licensed, so
 no model has been released (see [Data](#data-and-licences)). Help with data
 is the most useful contribution right now: see
-[CONTRIBUTING.md](CONTRIBUTING.md) and [TODO.md](TODO.md).
+[CONTRIBUTING.md](CONTRIBUTING.md) and [TODO.md](TODO.md). Discussion happens
+in `#omalaka` on the [Namibia Discord server](https://discord.gg/TpezqrBUwr).
 
 ## Quick start
 
