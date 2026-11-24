@@ -37,7 +37,7 @@ INFO = {
                     "Creative Commons license (CC-BY-4)'. Gated: users agree to share their contact "
                     "details with the publisher. Attribution: Digital Umuganda.",
     "checked": "2026-11-24",
-    "status": "verified licence; dialect not yet checked",
+    "status": "verified; Ndonga by word counts (docs/data.md)",
     "size": "76,898 unique transcripts, 2.5M words, from 76,905 clips and 339 speakers (2026-11-24)",
 }
 

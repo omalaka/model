@@ -57,9 +57,10 @@ Each one is an email; drafts can be prepared on request. Record answers in
 - [ ] Fine-tune MADLAD-400 3B on human data plus synthetic pairs; compare
       with and without the synthetic pairs.
 - [ ] Back-translate open monolingual Oshiwambo with the best open model.
-      `afrivoice` now has about 77k transcribed sentences (CC BY 4.0, gated):
-      have a speaker check which dialect they are, then use them first for
-      English → Oshiwambo.
+      `afrivoice` now has about 77k transcribed Ndonga lines (CC BY 4.0,
+      gated), so use them first for English → Oshindonga. Leave out any
+      sentence that later gets a human translation on omalaka.net, so
+      synthetic copies can't leak into dev or test.
 - [ ] English → Oshiwambo direction.
 - [ ] First release on the Hugging Face Hub, once a model beats base
       MADLAD-400 on an open test set, with a model card listing every source
