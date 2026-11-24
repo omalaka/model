@@ -74,7 +74,7 @@ def read_manifest(local: Path, split: str):
             if len(text.split()) < 3:
                 continue
             yield {"text": text, "split": split, "category": r.get("category"), "locale": r.get("locale"),
-                   "location": r.get("location"), "speaker": r.get("voice_creator_id"), "uid": r.get("uid")}
+                   "location": r.get("location"), "speaker": r.get("voice_creator_id"), "clip": r.get("key")}
 
 
 def fetch(out: Path):

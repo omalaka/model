@@ -5,7 +5,8 @@ row says who translated it and whether a second speaker checked it; see
 community/README.md for the format and the contribution terms.
 
 Two places: community/*.tsv (pull requests here) and community/website/*.tsv
-(written and checked on omalaka.net). Translations of English prompts from
+(written and checked on omalaka.net; ng-afrivoice.tsv there has Afrivoice
+sentences translated on the site). Translations of English prompts from
 the website (*-from-english.tsv) are a separate dataset,
 community_from_english, because their English side is from Tatoeba.
 """
