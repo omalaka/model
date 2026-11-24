@@ -45,6 +45,7 @@ def write_source(out: Path, info: dict, files: list):
 
 
 def registry():
-    from . import community, community_from_english, ongiini, synthetic_madlad, translatewiki, wikipedia
+    from . import (afrivoice, community, community_from_english, ongiini, synthetic_madlad, translatewiki,
+                   wikipedia)
     return {m.INFO["name"]: m for m in (translatewiki, community, community_from_english, ongiini, wikipedia,
-                                        synthetic_madlad)}
+                                        afrivoice, synthetic_madlad)}
