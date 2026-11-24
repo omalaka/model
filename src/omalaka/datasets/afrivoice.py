@@ -38,7 +38,7 @@ INFO = {
                     "details with the publisher. Attribution: Digital Umuganda.",
     "checked": "2026-11-24",
     "status": "verified licence; dialect not yet checked",
-    "size": "76,905 clips, 437.8 h (card); manifests about 90 MB",
+    "size": "76,898 unique transcripts, 2.5M words, from 76,905 clips and 339 speakers (2026-11-24)",
 }
 
 

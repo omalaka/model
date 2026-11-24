@@ -19,7 +19,7 @@ Codes: `kj` Oshikwanyama (ISO 639-3 `kua`), `ng` Oshindonga (`ndo`).
 | `community_from_english` | translated (train only) | kj, ng | omalaka.net translations of Tatoeba English prompts, `community/website/*-from-english.tsv` | CC BY 4.0 (Oshiwambo) + CC BY 2.0 FR (English) | verified, empty so far |
 | `ongiini` | test | kj, ng | 600 items | CC BY 4.0 (`data/oshiwambo_eval/LICENSE` upstream) | verified; English sources only until v1.0 (planned end 2026) |
 | `wikipedia` | mono | ng, kj | ngwiki 85 kB, kjwiki 8 kB (bz2); a few hundred lines of text | CC BY-SA 4.0, share-alike | verified; quality poor (see below) |
-| `afrivoice` | mono | ng (see below) | 76,905 transcribed clips, 437.8 h of speech; only the 90 MB of manifests is fetched | CC BY 4.0 (dataset card, checked 2026-11-24); gated | verified licence; dialect not checked |
+| `afrivoice` | mono | ng (see below) | 76,898 unique transcripts (2.5M words, 339 speakers) from 437.8 h of speech; only the 90 MB of manifests is fetched | CC BY 4.0 (dataset card, checked 2026-11-24); gated | verified licence; dialect not checked |
 | `synthetic-madlad` | synthetic | kj | as generated | English: Tatoeba, CC BY 2.0 FR. Kwanyama: MADLAD-400 output (Apache-2.0 model) | verified licence, experimental quality |
 
 Both Wikipedias are closed, read-only wikis. After extraction, much of the
@@ -30,10 +30,12 @@ speaker look before using it for anything.
 `afrivoice` is the Oshiwambo part of [Afrivoice V2](https://huggingface.co/datasets/DigitalUmuganda/Afrivoice_V2)
 by Digital Umuganda, a speech-recognition dataset: speakers described images
 on agriculture and finance, and others transcribed the recordings. It has no
-translations, but it is by far the largest open Oshiwambo text so far. The
-card codes it `ndo` (Oshindonga) without naming the dialect, so a speaker
-should check a sample (`rows.jsonl` keeps locale, location and speaker id)
-before it is used as Ndonga only. It is gated: accept the terms on the
+translations, but it is by far the largest open Oshiwambo text so far. Each
+line is a two- or three-sentence description, about 35 words. The card codes
+it `ndo` (Oshindonga) without naming the dialect. The spelling looks Ndonga
+(`dh` as in *ndhika*; Kwanyama *omunhu*, *ngeenge*, *nghee* almost never
+occur), but a speaker should check a sample before it is treated as Ndonga
+only. `rows.jsonl` keeps the split, category and speaker id. It is gated: accept the terms on the
 dataset page while logged in to Hugging Face, then `hf auth login`.
 
 In short: openly licensed human-translated parallel data for Oshiwambo is
