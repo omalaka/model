@@ -110,7 +110,8 @@ def must_yield() -> bool:
     return subprocess.run([sys.executable, tool, "check", "--owner", owner, "--minutes", "15"]).returncode == 3
 
 
-def fetch(out: Path, data: Path = None, limit: int = 1000, batch: int = 32, exclude: list = (), seed: int = 13):
+def fetch(out: Path, data: Path = None, limit: int = 1000, batch: int = 32, exclude: list = (), seed: int = 13,
+          beams: int = 4):
     import torch
     from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
@@ -133,7 +134,7 @@ def fetch(out: Path, data: Path = None, limit: int = 1000, batch: int = 32, excl
         kept = dropped = 0
         for i in range(0, len(todo), 512):
             chunk = todo[i:i + 512]
-            hyps = translator.translate([r["text"] for r in chunk], batch=batch)
+            hyps = translator.translate([r["text"] for r in chunk], beams=beams, batch=batch)
             with open(pairs, "a", encoding="utf-8") as ok, open(rejected, "a", encoding="utf-8") as no:
                 for r, h in zip(chunk, hyps):
                     why = bad(r["text"], h)
@@ -155,9 +156,10 @@ def main(argv=None):
     p.add_argument("--out", default="data/afrivoice-bt")
     p.add_argument("--limit", type=int, default=0, help="sentences to translate, 0 for all (resumes)")
     p.add_argument("--batch", type=int, default=32)
+    p.add_argument("--beams", type=int, default=4)
     p.add_argument("--exclude", nargs="*", default=[], help="omalaka.net exports whose clip keys to leave out")
     args = p.parse_args(argv)
-    print(fetch(Path(args.out), Path(args.data), args.limit, args.batch, args.exclude))
+    print(fetch(Path(args.out), Path(args.data), args.limit, args.batch, args.exclude, beams=args.beams))
 
 
 if __name__ == "__main__":
