@@ -11,6 +11,9 @@ AUTOCAST = DEVICE.split(":")[0]
 
 # M2M-100 has no Oshiwambo code; Swahili, a Bantu language, stands in.
 M2M_SOURCE = "sw"
+# MADLAD-400 has a Kwanyama tag but none for Ndonga ("<2ng>" is just text to it), so translation
+# into Ndonga is trained on the nearest Oshiwambo tag.
+MADLAD_TAG = {"ng": "kj"}
 
 
 def load_jsonl(path):
@@ -42,7 +45,7 @@ class Translator:
             tok.tgt_lang = "en"
 
     def source(self, text: str) -> str:
-        return f"<2{self.target}> {text}" if self.madlad else text
+        return f"<2{MADLAD_TAG.get(self.target, self.target)}> {text}" if self.madlad else text
 
     @torch.no_grad()
     def translate(self, texts, beams=4, batch=24, no_repeat=4):

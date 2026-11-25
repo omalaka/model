@@ -8,6 +8,14 @@ either dialect.
 --extra takes your own JSONL pairs {src, tgt, lang}. They are treated as human
 translations; whether a model trained on them can be shared is up to their
 licence (see docs/data.md).
+
+--direction en-ng builds English -> Oshindonga splits instead (rows {src:
+English, tgt: Oshindonga}) from back-translated sets (afrivoice-bt) and the
+Ndonga rows of the human sets, turned around. Back-translated pairs are train
+only, except --bt-dev of them held out as dev_bt.jsonl: their English is
+machine-made, so that is a rough in-domain check, not a test. Clip keys named
+in --exclude-keys files (omalaka.net exports such as ng-afrivoice.tsv) stay
+out: a sentence people translated there must not also be a synthetic pair.
 """
 import argparse
 import random
@@ -35,6 +43,46 @@ def usable(src: str, tgt: str, min_words: int) -> bool:
     return 0.4 <= ls / lt <= 1.8 or max(ls, lt) <= 3
 
 
+def en_ng(args, sets, rng):
+    human, bt = [], []
+    for name in args.datasets:
+        kind = sets[name].INFO["kind"]
+        path = Path(args.data) / name / "pairs.jsonl"
+        if not path.exists():
+            raise SystemExit(f"{path} is missing")
+        rows = [r for r in load_jsonl(path) if r.get("lang") == "ng"]
+        if kind == "backtranslated":
+            bt += rows
+        elif kind == "human":
+            human += rows
+        else:
+            raise SystemExit(f"{name} is {kind} data: its Oshindonga side is not human, so not for en-ng")
+    keys = set()
+    for path in args.exclude_keys:
+        keys.update(re.findall(r"[A-Za-z0-9]+#\d+", Path(path).read_text(encoding="utf-8")))
+    held_ng = {r["src"] for path in args.exclude for r in load_jsonl(path) if r.get("src")}
+
+    def turn(rows):
+        seen, out = set(), []
+        for r in rows:
+            src, tgt = detok(str(r["src"])), detok(str(r["tgt"]))
+            if r.get("ref") in keys or src in held_ng or src in seen or not usable(src, tgt, args.min_words):
+                continue
+            seen.add(src)
+            out.append({**r, "src": tgt, "tgt": src})
+        rng.shuffle(out)
+        return out
+
+    human, bt = turn(human), turn(bt)
+    n = min(args.test, len(human) // 10)
+    test, dev = human[:n], human[n:2 * n]
+    dev_bt = bt[:args.bt_dev]
+    train = human[2 * n:] + bt[args.bt_dev:]
+    for split, rows in (("train", train), ("dev", dev or dev_bt), ("dev_bt", dev_bt), ("test", test)):
+        write_jsonl(Path(args.out) / f"{split}.jsonl", rows)
+        print(split, len(rows))
+
+
 def main(argv=None):
     sets = registry()
     p = argparse.ArgumentParser()
@@ -48,8 +96,13 @@ def main(argv=None):
     p.add_argument("--test", type=int, default=1000, help="test size per run, at most a tenth of the human pairs")
     p.add_argument("--min-words", type=int, default=1)
     p.add_argument("--seed", type=int, default=13)
+    p.add_argument("--direction", default="ng-en", choices=["ng-en", "en-ng"])
+    p.add_argument("--bt-dev", type=int, default=500, help="en-ng: back-translated pairs held out as dev_bt")
+    p.add_argument("--exclude-keys", nargs="*", default=[], help="en-ng: exports whose clip keys to leave out")
     args = p.parse_args(argv)
     rng = random.Random(args.seed)
+    if args.direction == "en-ng":
+        return en_ng(args, sets, rng)
 
     human, synthetic = [], []
     for name in args.datasets:

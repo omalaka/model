@@ -4,6 +4,9 @@ usage: omalaka-evaluate NAME MODEL_OR_DIR [--base BASE] [--test FILE ...] [--doc
 Writes results/NAME.json. A sentence test set is JSONL with src, tgt and lang;
 a document set has src and ref, paragraphs separated by blank lines, and is
 translated sentence by sentence.
+With --target ng, test rows are English -> Oshindonga; --reverse turns an
+Oshiwambo -> English set around (its Ndonga rows only), so the internal test
+sets can score that direction too.
 Translations are only stored with --keep-text: leave it off for any test set
 that is not openly licensed, so the results file can be shared.
 """
@@ -73,6 +76,8 @@ def main(argv=None):
     p.add_argument("--base", help="base model when MODEL is a LoRA adapter")
     p.add_argument("--test", nargs="*", default=["splits/test.jsonl"], help="sentence test sets (JSONL)")
     p.add_argument("--docs", nargs="*", default=[], help="document test sets (JSONL)")
+    p.add_argument("--target", default="en", help="language translated into: en, or ng (MADLAD only)")
+    p.add_argument("--reverse", action="store_true", help="swap src and tgt of each test row (keeps lang == target)")
     p.add_argument("--limit", type=int, help="score only the first N rows of each set")
     p.add_argument("--keep-text", action="store_true", help="store every translation (open test sets only)")
     p.add_argument("--out", default="results")
@@ -86,12 +91,16 @@ def main(argv=None):
     else:
         model = AutoModelForSeq2SeqLM.from_pretrained(args.model, dtype=torch.bfloat16).to(DEVICE)
     model.eval()
-    translator = Translator(model, tok, args.base or args.model)
+    translator = Translator(model, tok, args.base or args.model, target=args.target)
     started = time.time()
 
-    result = {"name": args.name, "model": args.model, "base": args.base, "test": {}, "docs": {}}
+    result = {"name": args.name, "model": args.model, "base": args.base, "target": args.target,
+              "reverse": args.reverse, "test": {}, "docs": {}}
     for path in args.test:
-        rows = load_jsonl(path)[:args.limit]
+        rows = load_jsonl(path)
+        if args.reverse:
+            rows = [{**r, "src": r["tgt"], "tgt": r["src"]} for r in rows if r.get("lang") == args.target]
+        rows = rows[:args.limit]
         result["test"][Path(path).stem] = score_sentences(translator, rows, args.keep_text)
         print(args.name, path, {k: v for k, v in result["test"][Path(path).stem].items() if k != "samples"},
               flush=True)

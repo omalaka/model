@@ -1,6 +1,8 @@
-"""Fine-tune a translation model Oshiwambo -> English on DATA/train.jsonl.
+"""Fine-tune a translation model on DATA/train.jsonl: Oshiwambo -> English, or with --target ng English -> Oshindonga.
 
-usage: omalaka-train MODEL OUT_DIR [--data splits] [--lora] [--epochs N] [--batch B] [--lr LR]
+usage: omalaka-train MODEL OUT_DIR [--data splits] [--target en|ng] [--lora] [--epochs N] [--batch B] [--lr LR]
+Rows are {src, tgt} in the direction trained (omalaka-prepare --direction en-ng
+writes English -> Oshindonga splits).
 Resumable: every --save-every steps the full state (weights, optimizer,
 scheduler, position in the data, RNG) goes to OUT_DIR/last, and the adapter
 alone to OUT_DIR/ckpt-STEP for scoring. Run the same command again after a
@@ -27,6 +29,7 @@ def main(argv=None):
     p.add_argument("model")
     p.add_argument("out")
     p.add_argument("--data", default="splits", help="directory with train.jsonl and dev.jsonl (omalaka-prepare)")
+    p.add_argument("--target", default="en", help="language translated into: en, or ng (MADLAD only)")
     p.add_argument("--lora", action="store_true")
     p.add_argument("--epochs", type=float, default=1.0)
     p.add_argument("--batch", type=int, default=32)
@@ -59,9 +62,9 @@ def main(argv=None):
         model.enable_input_require_grads()
     lr = args.lr or (3e-4 if args.lora else 5e-5)
 
-    translator = Translator(model, tok, args.model)
+    translator = Translator(model, tok, args.model, target=args.target)
     train = load_jsonl(Path(args.data) / "train.jsonl")
-    if args.drop_religious:
+    if args.drop_religious and args.target == "en":
         train = [r for r in train if not RELIGIOUS.search(r["tgt"])]
     dev = load_jsonl(Path(args.data) / "dev.jsonl")[:300]
 
