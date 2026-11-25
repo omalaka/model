@@ -123,3 +123,39 @@ Synthetic data from MADLAD-400 helps a weaker model (M2M-100), but it can't
 take quality past MADLAD itself, and it hurts MADLAD. For now the best open
 system for Oshiwambo → English is the untrained MADLAD-400 3B. Further gains
 need human translations; see [TODO.md](../TODO.md).
+
+## Experiment 5 (2026-11-25): English -> Oshindonga from back-translated Afrivoice
+
+The other direction. 40,000 Afrivoice V2 Oshindonga sentences (human, CC BY
+4.0) were translated into English by base MADLAD-400 3B
+(`omalaka-backtranslate --limit 40000 --beams 2`). 35,382 pairs survived the
+copy, derailment and length filters (`data/afrivoice-bt`). MADLAD has no
+Ndonga tag, so `<2kj>` (Kwanyama) asks for Oshiwambo output. LoRA on MADLAD-400
+3B (`omalaka-prepare --direction en-ng`, `omalaka-train --target ng`, batch
+8 x 4, max length 96), stopped by its 170-minute cap at step 1,356 of 2,212
+(0.6 epochs at 0.12 steps a second, slower than experiment 4 because of
+longer sentences). There is no open human English -> Oshindonga test set, so:
+
+- MT560 Ndonga test rows turned around (internal, closed, scores only), and
+- 500 held-out back-translated pairs (`dev_bt`): in-domain, but the English
+  is synthetic.
+
+| Model | MT560 ng, en -> ng: BLEU / chrF++ | Derailed | dev_bt: BLEU / chrF++ | Derailed |
+|---|---|---|---|---|
+| MADLAD-400 3B, `<2kj>` | **3.9** / 17.4 | 17.4% | 0.6 / 15.4 | 15.6% |
+| + LoRA on 35k back-translated pairs | 3.6 / **17.6** | **0.6%** | **2.8 / 25.2** | **0.0%** |
+
+- **On human references nothing changed** (17.4 to 17.6 chrF++). What the
+  fine-tune learned is to stop looping: derailed output fell from 17% to
+  under 1%, which matters in practice, but its translations are no more
+  faithful.
+- **The dev_bt gain is mostly style.** The model writes fluent Oshindonga of
+  the Afrivoice kind, but because the training English is largely unrelated
+  to its Oshindonga (base MADLAD reads Oshindonga poorly), it learned to
+  ignore the source. On unrelated input it falls back on generic
+  Afrivoice sentences ("Aanafaalama ohaya kunu iimeno yawo...", farmers
+  plant their crops).
+- Back-translation needs a reverse model that understands the source. Base
+  MADLAD at about 23 chrF++ Oshiwambo -> English doesn't. A better
+  Oshindonga -> English model, trained only on open data, would have to come
+  first, or human translations from omalaka.net.
