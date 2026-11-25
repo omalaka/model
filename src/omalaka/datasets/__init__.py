@@ -11,6 +11,7 @@ INFO["kind"] says how prepare may use the data:
   synthetic  machine-made source side: train only, never dev or test
   translated human translations of English prompts: train only (translationese)
   mono       monolingual: back-translation input only
+  backtranslated  machine-made English side: English -> Oshiwambo only, never prepare's direction
   test       evaluation only, never training
 docs/data.md has the full table, including sources checked and rejected.
 """
@@ -45,7 +46,7 @@ def write_source(out: Path, info: dict, files: list):
 
 
 def registry():
-    from . import (afrivoice, community, community_from_english, ongiini, synthetic_madlad, translatewiki,
-                   wikipedia)
+    from . import (afrivoice, afrivoice_bt, community, community_from_english, ongiini, synthetic_madlad,
+                   translatewiki, wikipedia)
     return {m.INFO["name"]: m for m in (translatewiki, community, community_from_english, ongiini, wikipedia,
-                                        afrivoice, synthetic_madlad)}
+                                        afrivoice, synthetic_madlad, afrivoice_bt)}

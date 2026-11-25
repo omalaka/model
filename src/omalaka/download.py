@@ -1,8 +1,9 @@
 """Download open datasets into data/NAME/ and record where each file came from.
 
-usage: omalaka-download [NAME ...] [--data data]     (no NAME: every dataset but synthetic-madlad)
+usage: omalaka-download [NAME ...] [--data data]     (no NAME: every dataset but the machine-made ones)
        omalaka-download --list
-synthetic-madlad needs a GPU and takes options: run omalaka-synthetic instead.
+synthetic-madlad and afrivoice-bt need a GPU and take options: run omalaka-synthetic or
+omalaka-backtranslate instead.
 """
 import argparse
 from pathlib import Path
@@ -24,7 +25,7 @@ def main(argv=None):
         return
     if unknown := set(args.names) - set(sets):
         p.error(f"unknown dataset(s): {', '.join(sorted(unknown))}")
-    for name in args.names or [n for n, m in sets.items() if m.INFO["kind"] != "synthetic"]:
+    for name in args.names or [n for n, m in sets.items() if m.INFO["kind"] not in ("synthetic", "backtranslated")]:
         print(f"{name}: {sets[name].fetch(Path(args.data) / name)} rows", flush=True)
 
 
